@@ -19,8 +19,10 @@
 
   <script type="text/template" id="suggestion-engine-template">
       <% _.each(items.models, function(item) { %>
-        <img src="<%= get('favicon') %>"/>
-        <span class="item"><%= item.get('value') %></span>&nbsp;
+        <span class="img"><img src="<%= get('favicon') %>"/></span>
+        <div class="bd">
+          <div class="item"><%= item.get('value') %></div>
+        </div>
       <% }); %>
   </script>
 
@@ -29,18 +31,20 @@
   </script>
 
   <script type="text/template" id="suggestion-default-template">
-    <div class="items">
-      <img src="<%= get('favicon') %>"/>
+    <div class="media">
+      <span class="img"><img src="<%= get('favicon') %>"/></span>
+      <div class="bd">
       <% _.each(items.models, function(item) { %>
-        <span class="item"><%= item.get('value') %></span>&nbsp;
+        <div class="item"><%= item.get('value') %></div>
       <% }); %>
+      </div>
     </div>
   </script>
 
   <script type="text/template" id="history-template">
-    <li>
-        <div class="col"><img src="<%= get('favicon') %>"/></div>
-        <div class="col">
+    <li class="media">
+        <div class="img"><img src="<%= get('favicon') %>"/></div>
+        <div class="bd">
             <div class="title"><%= get('title') %></div>
             <div class="url"><%= get('url') %></div>
         </div>
@@ -48,90 +52,121 @@
   </script>
 
   <style type="text/css">
+    /* ====== media ====== */
+    .media {
+      margin: 10px;
+    }
+    .media, .bd {
+      overflow: hidden;
+      _overflow: visible;
+      zoom: 1;
+    }
+    .media .img {
+      float: left;
+      margin-right: 10px;
+    }
+    .media .img img {
+      display: block;
+      width: 32px;
+      height: 32px;
+    }
+    .media .imgExt {
+      float: right;
+      margin-left: 10px;
+    }
+
     body {
-        font-size: 14px;
-        color: #333;
-        width: 100%;
+      font-size: 16px;
+      color: #333;
+      width: 100%;
     }
     ol, li {
-        margin: 0;
-        padding: 0;
-        list-style: none;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
-    .results {
-        margin: 0;
-        position: relative;
-        vertical-align: top;
+
+    .results.search {
+      background-color: #DBE0E4;
+      padding: 1px;
     }
-    .results li {
-        vertical-align: top;
-        margin-top: 5px;
-        padding: 5px 0 5px 5px;
-        border-bottom: 1px solid #ddd;
+    .suggestions {
+      color: #1c75bc;
+      text-decoration: underline;
     }
-    .results li img {
-        width: 36px;
-        height: 36px;
-        margin: 0 4px;
+
+    .suggestions.defaults .item {
+      padding-bottom: 19px;
     }
-    .results li .col {
-        vertical-align: top;
-        display: inline-block;
-    }
+
     .results.history li {
       white-space: nowrap;
     }
-    .results.history li .title {
-        font-weight: bold;
+    .results.history .title {
+      font-size: 120%;
     }
-    .results.history li .url {
-        color: #666;
+    .results.history .url {
+      color: #888;
+      font-size: 80%;
     }
 
+    .suggestions.defaults {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 50%;
+    }
+    .suggestions.others {
+      position: relative;
+      left: 50%;
+      width: 50%;
+      top: 0;
+      border: none;
+    }
+
+
+  </style>
+
+  <!-- style type="text/css">
+    .results {
+      margin: 0;
+      position: relative;
+    }
+    .results li {
+      margin-top: 5px;
+      padding: 5px 0 5px 5px;
+      border-bottom: 1px solid #ddd;
+    }
+    .results li img {
+      width: 32px;
+      height: 32px;
+      margin: 0 4px;
+    }
+    .results li .items,
     .results li .engine.suggestion {
-      font-size: 18px;
-      line-height: 32px;
-      white-space: nowrap;
-      background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #E2E7EC), color-stop(1, #D2DAE2) );
-      background:-moz-linear-gradient( center top, #E2E7EC 5%, #D2DAE2 100% );
-      background-color:#E2E7EC;
-      -moz-border-radius:2px;
-      -webkit-border-radius:2px;
-      border-radius:2px;
-      color:#2D2D2E;
-      padding: 0 4px 0 0;
-      margin: 2px 4px 2px 0;
-      display: inline-block;
-      vertical-align: middle;
+      margin-bottom: 5px;
+      position: relative;
+      min-height: 40px;
     }
-    .results li .engine.suggestion img {
-      border-right: 1px solid #b4b8c2;
-      padding-right: 4px;
-      margin-right: 0px;
-    }
-    .results.search li img {
-      vertical-align: middle;
-    }
-    .results li .items {
-        display: inline-block;
+    .results li .item {
+      text-decoration: underline;
     }
     .suggestions.defaults .items .item {
-      font-size: 20px;
-      line-height: 32px;
-      white-space: nowrap;
-      background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #E2E7EC), color-stop(1, #D2DAE2) );
-      background:-moz-linear-gradient( center top, #E2E7EC 5%, #D2DAE2 100% );
-      background-color:#E2E7EC;
-      -moz-border-radius:2px;
-      -webkit-border-radius:2px;
-      border-radius:2px;
-      color:#2D2D2E;
-      padding: 2px 4px;
-      margin: 2px 4px 2px 0;
-      display: inline-block;
-      vertical-align: middle;
+      padding: 0;
+      margin: 0;
+      display: block;
     }
-  </style>
+    .results li img {
+      padding-right: 4px;
+      margin-right: 0px;
+      float: left;
+      position: absolute;
+    }
+    .results li .values {
+      margin-left: 40px;
+    }
+
+  </style -->
   <script type="text/javascript">
     // we don't want the default sync methods, just display
     Backbone.sync = function(method, model, options) {};
@@ -140,6 +175,9 @@
       nativeBrowser = {
         onClickSuggestion: function(arg0, arg1) {
           console.log(arg0, arg1);
+        },
+        log: function(arg) {
+          console.log(arg);
         }
       }
     }
@@ -214,7 +252,7 @@
     });
 
     var SuggestionView = Backbone.View.extend({
-      className : "engine suggestion",
+      className : "media",
       initialize: function () {
         this.model.on("all", this.render, this);
       },
@@ -287,6 +325,7 @@
     };
 
     window.onHistoryChanged = function (herstory) {
+      nativeBrowser.log("Got onHistoryChanged!!! ");
       _.each(herstory, function (stories) {
         _.each(stories, function (story, term) {
           hl.reset(story.map(function (item) { return new HistoryItem(item); }));
@@ -309,9 +348,10 @@
         try {
           options = JSON.parse(decodeURI(window.location.search.substr(1)));
         } catch (e) {
-          console.log(e);
+          nativeBrowser.log(e);
         }
-      console.log("Options = "+JSON.stringify(options));
+      nativeBrowser.log("Options = "+JSON.stringify(options));
+      nativeBrowser.log(window.onHistoryChanged);
 
       $(".results").disableSelection();
       // sets up the suggestions list view
