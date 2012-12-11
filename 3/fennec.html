@@ -16,7 +16,7 @@
 
   <link href="../css/normalize.css" rel="stylesheet">
   <link href="../css/base.css" rel="stylesheet">
-  <link href="../css/2.css" rel="stylesheet">
+  <link href="../css/3.css" rel="stylesheet">
 
   <script type="text/template" id="suggestion-engine-template">
       <% _.each(items.models, function(item) { %>
@@ -56,6 +56,22 @@
 
   <script type="text/javascript" src="../js/underscore.js"></script>
   <script type="text/javascript" src="../js/base.js"></script>
+  <script type="text/javascript">
+
+  window.onSuggestions = function(value) {
+    var engine = value.engine,
+        results = value.results,
+        terms = value.terms;
+
+    var suggestengine = sl.get(engine.siteURL);
+    nativeBrowser.log("engineUrl = " + engine.siteURL);
+    if (typeof suggestengine === "undefined" && engine.siteURL !== "http://d2lo25i6d3q8zm.cloudfront.net/browser-plugins/AmazonSearchSuggestionsOSD.Firefox.xml") {
+      suggestengine = sl.create({ url : engine.siteURL, favicon : engine.icon });
+    }
+    suggestengine.setSuggestions(results);
+};
+
+  </script>
 
 </head>
 <body>
